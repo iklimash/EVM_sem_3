@@ -2,11 +2,11 @@
 #include <cstdint>
 using namespace std;
 
-union 
-    {
+  union {
         double d;
-        unsigned char bytes[sizeof(double)];
+        unsigned long long bits;
     } converter;
+    
 
 void intConvertBinary(int value)
 {
@@ -29,30 +29,21 @@ void intConvertBinary(int value)
 
 void doubleConvertBinary(double value) 
 {
-    
+
     converter.d = value;
     
-    cout << ((converter.bytes[7] >> 7) & 1) << " ";
+    // Знак (1 бит)
+    cout << ((converter.bits >> 63) & 1) << " ";
     
-    // порядок
-    for (int i = 6; i >= 0; i--) 
-    {
-        cout << ((converter.bytes[7] >> i) & 1);
-    }
-    for (int i = 7; i >= 4; i--) 
-    {
-        cout << ((converter.bytes[6] >> i) & 1);
+    // Порядок (11 бит)
+    for (int i = 62; i >= 52; i--) {
+        cout << ((converter.bits >> i) & 1);
     }
     cout << " ";
     
-    //  мантисс
-    for (int i = 3; i >= 0; i--) {
-        cout << ((converter.bytes[6] >> i) & 1);
-    }
-    for (int i = 5; i >= 0; i--) {
-        for (int j = 7; j >= 0; j--) {
-            cout << ((converter.bytes[i] >> j) & 1);
-        }
+    // Мантисса (52 бита)
+    for (int i = 51; i >= 0; i--) {
+        cout << ((converter.bits >> i) & 1);
     }
     cout << endl;
 }
@@ -74,21 +65,18 @@ void doubleChangeBit(double& value, int amount, int* index, int* values)
 {   
 
     converter.d = value;
-    
     for (int i = 0; i < amount; i++)
     {
-        int globalIndex = index[i];
-        int bytesIndex = 7 - (globalIndex / 8);
-        int bitInByte = globalIndex % 8;
-
-        if (values[i] == 1)
-        {
-            converter.bytes[bytesIndex] |= (1 << bitInByte);
-        } else
-        {
-            converter.bytes[bytesIndex] &= ~(1 << bitInByte);
-        }
+    if (values[i] == 1)
+    {
+        converter.bits |= (1ULL << index[i]);
     }
+    else
+    {
+        converter.bits &= ~(1ULL << index[i]);
+    }
+    }
+
     value = converter.d;
 }
 
