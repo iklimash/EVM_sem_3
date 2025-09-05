@@ -53,23 +53,6 @@ void doubleConvertBinary(double value)
     }
     cout << endl;
 }
-// void doubleConvertBinary(double value) {
- 
-//     uint64_t bits;
-//     memcpy(&bits, &value, sizeof(value));
-    
-//     int amountBit = sizeof(value) * 8;
-
-//     for(int i = amountBit - 1; i >= 0; i--) 
-//     {
-//         cout << ((bits >> i) & 1);
-//         if (i % 4 == 0 && i != 0) 
-//         {
-//             cout << ' ';
-//         }
-//     }
-//     cout << endl;
-// }
 
 
 void showMenu()
@@ -99,7 +82,6 @@ int main()
         case 2:
             cout << "Enter a double number\n>"; cin >> doubleValue;
             doubleConvertBinary(doubleValue);
-            doubleConvertBinary(0.0);
             break;
         case 0:
             return 0;
