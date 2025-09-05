@@ -20,7 +20,6 @@ void intConvertBinary(int value)
     }
     cout << endl;
 }
-
 void doubleConvertBinary(double value) 
 {
     union 
