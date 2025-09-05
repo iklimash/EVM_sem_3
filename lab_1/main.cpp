@@ -2,6 +2,11 @@
 #include <cstdint>
 using namespace std;
 
+union 
+    {
+        double d;
+        unsigned char bytes[sizeof(double)];
+    } converter;
 
 void intConvertBinary(int value)
 {
@@ -20,13 +25,10 @@ void intConvertBinary(int value)
     }
     cout << endl;
 }
+
+
 void doubleConvertBinary(double value) 
 {
-    union 
-    {
-        double d;
-        unsigned char bytes[sizeof(double)];
-    } converter;
     
     converter.d = value;
     
@@ -54,18 +56,40 @@ void doubleConvertBinary(double value)
     }
     cout << endl;
 }
-void changeBit(int& intValue, int amount, int* index, int* values)
+void intChangeBit(int& value, int amount, int* index, int* values)
 {   
     for(int i = 0; i < amount; i++)
     {
         if(values[i] == 1)
         {
-            intValue |= (1 << index[i]);
+            value |= (1 << index[i]);
         } else
         {
-            intValue &= ~(1 << index[i]);
+            value &= ~(1 << index[i]);
         }
     }
+}
+
+void doubleChangeBit(double& value, int amount, int* index, int* values)
+{   
+
+    converter.d = value;
+    
+    for (int i = 0; i < amount; i++)
+    {
+        int globalIndex = index[i];
+        int bytesIndex = 7 - (globalIndex / 8);
+        int bitInByte = globalIndex % 8;
+
+        if (values[i] == 1)
+        {
+            converter.bytes[bytesIndex] |= (1 << bitInByte);
+        } else
+        {
+            converter.bytes[bytesIndex] &= ~(1 << bitInByte);
+        }
+    }
+    value = converter.d;
 }
 
 void showMenu()
@@ -134,7 +158,7 @@ int main()
                     } while (values[i] != 0 && values[i] != 1);
                     
                 }
-                changeBit(newIntValue, amount, index, values);
+                intChangeBit(newIntValue, amount, index, values);
                 intConvertBinary(intValue);
                 intConvertBinary(newIntValue);
 
@@ -142,7 +166,47 @@ int main()
                 delete[] values;
             } else
             {
+                // ----------------------------------------------------------------------------
+                // ----------------------------------------------------------------------------
+                // ----------------------------------------------------------------------------
+                // ----------------------------------------------------------------------------
+                cout << "Enter double number\n>"; 
+                cin >> doubleValue;
+                double newDoubleValue = doubleValue;
+                doubleConvertBinary(doubleValue);
+                
+                cout << "Enter amount values\n>";
+                cin >> amount;
+                int* index = new int[amount];
+                int* values = new int[amount];
+                for (int i = 0; i < amount; i++) 
+                {
+                    do
+                    {
+                        cout << "Enter index values for " << i+1 << " bit (0-63)\n>";
+                        cin >> index[i];
+                        if(index[i] < 0 || index[i] > 63)
+                        {
+                            cout << "Invalid index\n";
+                        }
+                    } while (index[i] < 0 || index[i] > 63);
+                    do
+                    {
+                        cout << "Enter new values for " << i+1 << " (0 or 1)\n>";
+                        cin >> values[i];
+                        if(values[i] != 0 && values[i] != 1)
+                        {
+                            cout << "Invalid value\n";
+                        }
+                    } while (values[i] != 0 && values[i] != 1);
+                    
+                }
+                doubleChangeBit(newDoubleValue, amount, index, values);
+                doubleConvertBinary(doubleValue);
+                doubleConvertBinary(newDoubleValue);
 
+                delete[] index;
+                delete[] values;
             }
 
             break;
