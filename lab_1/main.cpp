@@ -1,13 +1,12 @@
 #include <iostream>
-#include <cstdint>
 using namespace std;
 
-  union {
-        double d;
-        unsigned long long bits;
-    } converter;
+union 
+{
+    double d;
+    unsigned long long bits;
+} converter;
     
-
 void intConvertBinary(int value)
 {
     unsigned int u_value = value;
@@ -25,8 +24,6 @@ void intConvertBinary(int value)
     }
     cout << endl;
 }
-
-
 void doubleConvertBinary(double value) 
 {
 
