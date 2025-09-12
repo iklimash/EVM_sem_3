@@ -57,10 +57,25 @@ void createWindow (int X1, int Y1, int X2, int Y2)
         cout << '#';
     }    
 }
-void scrollWindow(int X1, int Y1, int X2, int Y2) {
-    HWND hWnd = GetConsoleWindow();
-    RECT rect = { X1, Y1, X2, Y2 };
-    ScrollWindowEx(hWnd, 0, 1, &rect, NULL, NULL, NULL, SW_INVALIDATE);
+
+void scrollArea(int X1, int Y1, int X2, int Y2, int lines) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+                
+    SMALL_RECT scrollRect;
+    scrollRect.Left = X1;
+    scrollRect.Top = Y1;
+    scrollRect.Right = X2;
+    scrollRect.Bottom = Y2;
+    
+    COORD scrollTarget;
+    scrollTarget.X = X1;
+    scrollTarget.Y = Y1 - 1; 
+    
+    CHAR_INFO fill;
+    fill.Char.UnicodeChar = ' ';
+    fill.Attributes = 15; 
+                
+    ScrollConsoleScreenBuffer(hConsole, &scrollRect, NULL, scrollTarget, &fill);
 }
 
 void printColors(int X1, int Y1, int X2, int Y2, unsigned delay, int step)
@@ -71,41 +86,39 @@ void printColors(int X1, int Y1, int X2, int Y2, unsigned delay, int step)
                                "lightcyan","lightred","lightmagenta","yellow","white"
     };
     const string colorNums[] = {
-            "black","blue","green","cyan","red","magenta","brown","lightgray","darkgray","lightblue","lightgreen",
-                               "lightcyan","lightred","lightmagenta","yellow","white"
+        "0","1","2","3","4","5","6","7","8","9","10",
+                               "11","12","13","14","15"    
     };
     setColor(15, 0);
     createWindow(X1, Y1, X2, Y2);
+    int currLine = Y1;
     for (int colorIndex = 0; ; colorIndex = (++colorIndex) % 16) 
     {
         for (int textIndex = 0; textIndex < 16; ++textIndex)
         {
-            int tempBg = colorIndex, tempText = textIndex;
-            for (int line = 0; line < maxLines; ++line) {
-                if (Y2 - line * (step + 1) >= Y1 && Y2 - line * (step + 1) <= Y2) {
-                    
-                    setColor(15, 0); 
-                    gotoxy(X1, Y1 - line * (step + 1));
-                    for (int i = 0; i < X2 - Y1 + 1; ++i) {
-                        cout << ' ';
-                    }
-                    setColor(tempText, tempBg);
-                    gotoxy(X1, Y1 - line * (step + 1));
-                    cout << colorNums[tempBg] << ' ' << colorNames[tempText];
-                }
+            
+            if (currLine > Y2) {
+               
+                scrollArea(X1, Y1 + 1, X2, Y2, 1);
 
-                
-                if (tempText == 0 && tempBg!= 0) {
-                    tempBg--;
-                    tempText = 15;
-                } else if (tempText == 0 && tempBg == 0) {
-                    break;
-                } else {
-                    tempText--;
-                }
+                currLine = Y2;
             }
-            scrollWindow(X1, Y1, X2, Y2);
+            
+            setColor(15, 0);
+            gotoxy(X1, currLine);
+            for (int i = 0; i < X2 - X1 + 1; ++i) {
+                cout << ' ';
+            }
+            
+            setColor(textIndex, colorIndex);
+            gotoxy(X1, currLine);
+            cout << colorNums[colorIndex] << ' ' << colorNames[textIndex];
+        
+            currLine++;
+            
             Sleep(delay);
+
+    
         }
     }
 }   
