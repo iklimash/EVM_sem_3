@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
-#include <conio.h>
+#include <string>
+
 using namespace std;
 
 enum Colors {
@@ -54,9 +55,12 @@ void createWindow (int X1, int Y1, int X2, int Y2)
     {    
         gotoxy(X2 + 1, y);
         cout << '#';
-    }
-
-        
+    }    
+}
+void scrollWindow(int X1, int Y1, int X2, int Y2) {
+    HWND hWnd = GetConsoleWindow();
+    RECT rect = { X1, Y1, X2, Y2 };
+    ScrollWindowEx(hWnd, 0, 1, &rect, NULL, NULL, NULL, SW_INVALIDATE);
 }
 
 int main()
@@ -65,6 +69,8 @@ int main()
     cout << "Hello"; 
 
     createWindow(10, 5, 70, 15);
+    scrollWindow(10, 5, 70, 15);
     setColor(WHITE, WHITE);
+
     return 0;
 }
