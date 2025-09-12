@@ -63,14 +63,66 @@ void scrollWindow(int X1, int Y1, int X2, int Y2) {
     ScrollWindowEx(hWnd, 0, 1, &rect, NULL, NULL, NULL, SW_INVALIDATE);
 }
 
+void printColors(int X1, int Y1, int X2, int Y2, unsigned delay, int step)
+{
+    const int maxLines = (Y2 - Y1) / step + 1;
+    const string colorNames[] = {
+            "black","blue","green","cyan","red","magenta","brown","lightgray","darkgray","lightblue","lightgreen",
+                               "lightcyan","lightred","lightmagenta","yellow","white"
+    };
+    const string colorNums[] = {
+            "black","blue","green","cyan","red","magenta","brown","lightgray","darkgray","lightblue","lightgreen",
+                               "lightcyan","lightred","lightmagenta","yellow","white"
+    };
+    setColor(15, 0);
+    createWindow(X1, Y1, X2, Y2);
+    for (int colorIndex = 0; ; colorIndex = (++colorIndex) % 16) 
+    {
+        for (int textIndex = 0; textIndex < 16; ++textIndex)
+        {
+            int tempBg = colorIndex, tempText = textIndex;
+            for (int line = 0; line < maxLines; ++line) {
+                if (Y2 - line * (step + 1) >= Y1 && Y2 - line * (step + 1) <= Y2) {
+                    
+                    setColor(15, 0); 
+                    gotoxy(X1, Y1 - line * (step + 1));
+                    for (int i = 0; i < X2 - Y1 + 1; ++i) {
+                        cout << ' ';
+                    }
+                    setColor(tempText, tempBg);
+                    gotoxy(X1, Y1 - line * (step + 1));
+                    cout << colorNums[tempBg] << ' ' << colorNames[tempText];
+                }
+
+                
+                if (tempText == 0 && tempBg!= 0) {
+                    tempBg--;
+                    tempText = 15;
+                } else if (tempText == 0 && tempBg == 0) {
+                    break;
+                } else {
+                    tempText--;
+                }
+            }
+            scrollWindow(X1, Y1, X2, Y2);
+            Sleep(delay);
+        }
+    }
+}   
+
 int main()
 {
-    // system("cls");
-    cout << "Hello"; 
+    system("cls");
+    Sleep(1400);
+    const unsigned T = 1400; // delay mc
+    const int S = 1; // Шаг строк
 
-    createWindow(10, 5, 70, 15);
-    scrollWindow(10, 5, 70, 15);
-    setColor(WHITE, WHITE);
+    const int X1 = 15;
+    const int Y1 = 10;
+    const int X2 = 65;
+    const int Y2 = 20;
+
+    printColors(X1, Y1, X2, Y2, T, S);
 
     return 0;
 }
