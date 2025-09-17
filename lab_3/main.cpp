@@ -11,7 +11,7 @@ int main() {
     const float start_out = 0.5;
     const int end_out = 6;
 
-    const int hatch_out = 57;
+    const int hatch_out = 58;
     const int number_out = 15;
     const int lines_out = 32; //
     double y_result;
