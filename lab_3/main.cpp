@@ -26,7 +26,7 @@ int main() {
 
     graph_driver = DETECT;
     detectgraph(&graph_driver, &graph_mode);
-    initgraph(&graph_driver, &graph_mode, "C:\\TURBOC3\\BGI");
+    initgraph(&graph_driver, &graph_mode, NULL);
 
     graph_error_code = graphresult();
     if (graph_error_code != grOk) {
