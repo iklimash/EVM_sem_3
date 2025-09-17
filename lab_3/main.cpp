@@ -4,14 +4,16 @@
 #include <math.h>
 int main() {
     const double pi = 3.14159265358979323846;
-    const double x_approach = 30 / pi;
-    const double y_approach = 15;
-    const int ten_num = 10;
+    const double x_approach = 60 / pi;
+    const double y_approach = 30;
+
+    const int ten_num = 15;
     const float start_out = 0.5;
     const int end_out = 6;
-    const int hatch_out = 30;
-    const int number_out = 10;
-    const int lines_out = 22;
+
+    const int hatch_out = 57;
+    const int number_out = 15;
+    const int lines_out = 32; //
     double y_result;
     double x_result;
     double y_out;
@@ -25,6 +27,7 @@ int main() {
     char maximum_out[50];
 
     graph_driver = DETECT;
+    graph_mode = VGA;
     detectgraph(&graph_driver, &graph_mode);
     initgraph(&graph_driver, &graph_mode, NULL);
 
@@ -37,25 +40,26 @@ int main() {
 
     max_x = getmaxx();
     max_y = getmaxy();
-    setviewport(0, 0, max_x, max_y, 0);
+    setviewport(10, 10, max_x - 10, max_y - 10, 0);
     setlinestyle(0, 0, 3);
     line(lines_out, max_y, lines_out, 0);            // vert
     line(lines_out, max_y / 2, max_x, max_y / 2);        // gorizont
-
-    for (i = 0; i <= end_out; i++) {
+    // Разметка по оси X
+    for (i = 1; i <= end_out; i++) { // Начинаем с 1, так как 0 - это 0π
         sprintf(symbols_out, "%dPI", i);
         outtextxy(lines_out + hatch_out * i, max_y / 2 + ten_num, symbols_out);
         line(lines_out + hatch_out * i, max_y / 2 + ten_num / 2, lines_out + hatch_out * i, max_y / 2 - ten_num / 2);
     }
-
+    // Разметка по оси Y
     for (i = -number_out; i <= number_out; i++) {
         sprintf(symbols_out, "%d", i);
         outtextxy(0, max_y / 2 - hatch_out * i / 2 - ten_num / 2, symbols_out);
         line(lines_out + ten_num / 2, max_y / 2 - hatch_out * i / 2, lines_out - ten_num / 2, max_y / 2 - hatch_out * i / 2);
     }
-
     setlinestyle(3, 0, 3);
-    line(lines_out + hatch_out * start_out, max_y, lines_out + hatch_out * start_out, 0); 
+    line(lines_out + hatch_out * start_out, max_y, 
+         lines_out + hatch_out * start_out, 0); 
+
     setlinestyle(0, 0, 3);
     setviewport(0, 0, max_x, max_y, 0);
     // graph
@@ -66,13 +70,16 @@ int main() {
         if (y_result > max_result) {
             max_result = y_result;
         }
-        putpixel(lines_out + x_out, max_y / 2 - y_out, 4);
+        setcolor(4);
+        circle(lines_out + x_out, max_y / 2 - y_out, 1);
     }
 
     setlinestyle(3, 0, 3);
-    line(lines_out + hatch_out * end_out, max_y, lines_out + hatch_out * end_out, 0);
+    line(lines_out + hatch_out * end_out + 10, max_y, 
+         lines_out + hatch_out * end_out + 10, 0);
   
-    sprintf(maximum_out, "Max function value: %f", max_result);
+    sprintf(maximum_out, " ", max_result);
+    settextstyle(0, 0, 2);
     outtextxy(max_x / 3, max_y - lines_out, maximum_out);
     getch();
     closegraph();
