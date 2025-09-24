@@ -70,7 +70,7 @@ int main() {
         if (y_result > max_result) {
             max_result = y_result;
         }
-        setcolor(4);
+        setcolor(9);
         circle(lines_out + x_out, max_y / 2 - y_out, 1);
     }
 
