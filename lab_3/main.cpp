@@ -11,8 +11,8 @@ int main() {
     const float start_out = 0.5;
     const int end_out = 6;
 
-    const int hatch_out = 65;
-    const int number_out = 15;
+    const int hatch_out = 58;
+    const int number_out = 10;
     const int lines_out = 22; 
     double y_result;
     double x_result;
@@ -54,26 +54,29 @@ int main() {
     for (i = -number_out; i <= number_out; i++) {
         sprintf(symbols_out, "%d", i);
         outtextxy(0, max_y / 2 - hatch_out * i / 2 - ten_num / 2, symbols_out);
-        line(lines_out + ten_num / 2, max_y / 2 - hatch_out * i / 2, lines_out - ten_num / 2, max_y / 2 - hatch_out * i / 2);
+        line(lines_out + ten_num / 2, max_y / 2 - hatch_out * i / 2, 
+            lines_out - ten_num / 2, max_y / 2 - hatch_out * i / 2);
     }
-    setlinestyle(3, 0, 3);
-    line(lines_out + hatch_out * start_out, max_y, 
-         lines_out + hatch_out * start_out, 0); 
 
     setlinestyle(0, 0, 3);
     setviewport(0, 0, max_x, max_y, 0);
     // graph
-    for (x_result = start_out * pi + 0.6; x_result <= end_out * pi + 2.1; x_result += 0.001) {
-        y_result = pow(sin(x_result), 3) + pow(cos(x_result), 3); //- 0.4; 
+    for (x_result = start_out * pi + 0.55; x_result <= end_out * pi; x_result += 0.001) {
+        y_result = pow(sin(x_result), 3) + pow(cos(x_result), 3);
         x_out = x_result * x_approach;
-        y_out = y_result * y_approach;
+        y_out = y_result * y_approach - 12;
         if (y_result > max_result) {
             max_result = 1;
         }
         setcolor(9);
         circle(lines_out + x_out, max_y / 2 - y_out, 1);
     }
+    setcolor(15);
+    setlinestyle(3, 0, 3);
+    line(lines_out + hatch_out * start_out + 10, max_y, 
+         lines_out + hatch_out * start_out + 10, 0); 
 
+    setcolor(9);
     setlinestyle(3, 0, 3);
     line(lines_out + hatch_out * end_out + 10, max_y, 
          lines_out + hatch_out * end_out + 10, 0);
