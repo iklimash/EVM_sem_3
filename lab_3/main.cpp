@@ -78,7 +78,7 @@ int main() {
     line(lines_out + hatch_out * end_out + 10, max_y, 
          lines_out + hatch_out * end_out + 10, 0);
   
-    sprintf(maximum_out, " ", max_result);
+    sprintf(maximum_out, "Max function value: %.2f", max_result);
     settextstyle(0, 0, 2);
     outtextxy(max_x / 3, max_y - lines_out, maximum_out);
     getch();
