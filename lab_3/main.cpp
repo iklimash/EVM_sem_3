@@ -11,9 +11,9 @@ int main() {
     const float start_out = 0.5;
     const int end_out = 6;
 
-    const int hatch_out = 58;
+    const int hatch_out = 65;
     const int number_out = 15;
-    const int lines_out = 32; //
+    const int lines_out = 22; 
     double y_result;
     double x_result;
     double y_out;
@@ -63,12 +63,12 @@ int main() {
     setlinestyle(0, 0, 3);
     setviewport(0, 0, max_x, max_y, 0);
     // graph
-    for (x_result = start_out * pi; x_result <= end_out * pi; x_result += 0.001) {
-        y_result = pow(sin(x_result), 3) + pow(cos(x_result), 3); 
+    for (x_result = start_out * pi + 0.6; x_result <= end_out * pi + 2.1; x_result += 0.001) {
+        y_result = pow(sin(x_result), 3) + pow(cos(x_result), 3); //- 0.4; 
         x_out = x_result * x_approach;
         y_out = y_result * y_approach;
         if (y_result > max_result) {
-            max_result = y_result;
+            max_result = 1;
         }
         setcolor(9);
         circle(lines_out + x_out, max_y / 2 - y_out, 1);
