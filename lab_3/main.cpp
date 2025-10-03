@@ -31,13 +31,6 @@ int main() {
     detectgraph(&graph_driver, &graph_mode);
     initgraph(&graph_driver, &graph_mode, NULL);
 
-    graph_error_code = graphresult();
-    if (graph_error_code != grOk) {
-        printf("Error: %s\n", grapherrormsg(graph_error_code));
-        getch();
-        return 255;
-    }
-
     max_x = getmaxx();
     max_y = getmaxy();
     setviewport(10, 10, max_x - 10, max_y - 10, 0);
